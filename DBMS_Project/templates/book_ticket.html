@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Tickets - Theatre Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .seat {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            user-select: none;
+        }
+        .seat.selected {
+            background-color: #28a745;
+            color: white;
+        }
+        .seat.booked {
+            background-color: #dc3545;
+            color: white;
+            cursor: not-allowed;
+        }
+        .screen {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>Book Tickets for {{ movie.title }}</h2>
+            </div>
+            <div class="card-body">
+                <div class="screen">SCREEN</div>
+                
+                <form method="POST" id="bookingForm">
+                    <div class="seat-grid">
+                        {% for seat in seats %}
+                        <div class="seat {% if seat.booked %}booked{% endif %}" 
+                             data-seat="{{ seat.number }}"
+                             {% if not seat.booked %}onclick="toggleSeat(this)"{% endif %}>
+                            {{ seat.number }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="selected-seats mt-3">
+                        <h4>Selected Seats: <span id="selectedSeatsList"></span></h4>
+                        <h4>Total Amount: ₹<span id="totalAmount">0.00</span></h4>
+                    </div>
+                    
+                    <input type="hidden" name="seats[]" id="selectedSeats">
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg" id="proceedBtn" disabled>Proceed to Payment</button>
+                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedSeats = [];
+        const pricePerSeat = {{ show.price }};
+        
+        function toggleSeat(element) {
+            const seatNumber = element.dataset.seat;
+            const index = selectedSeats.indexOf(seatNumber);
+            
+            if (index === -1) {
+                selectedSeats.push(seatNumber);
+                element.classList.add('selected');
+            } else {
+                selectedSeats.splice(index, 1);
+                element.classList.remove('selected');
+            }
+            
+            updateSelectedSeats();
+        }
+        
+        function updateSelectedSeats() {
+            const selectedSeatsList = document.getElementById('selectedSeatsList');
+            const selectedSeatsInput = document.getElementById('selectedSeats');
+            const totalAmount = document.getElementById('totalAmount');
+            const proceedBtn = document.getElementById('proceedBtn');
+            
+            selectedSeatsList.textContent = selectedSeats.join(', ');
+            selectedSeatsInput.value = selectedSeats.join(',');
+            totalAmount.textContent = (selectedSeats.length * pricePerSeat).toFixed(2);
+            proceedBtn.disabled = selectedSeats.length === 0;
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Show - {{ show.movie.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Edit Show</h2>
+        <a href="{{ url_for('manage_shows', theatre_id=show.tid) }}" class="btn btn-secondary">Back to Shows</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="m_id" class="form-label">Movie</label>
+                    <select class="form-select" id="m_id" name="m_id" required>
+                        {% for movie in movies %}
+                        <option value="{{ movie.m_id }}" {% if movie.m_id == show.m_id %}selected{% endif %}>
+                            {{ movie.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="datetime" class="form-label">Show Date and Time</label>
+                    <input type="datetime-local" class="form-control" id="datetime" name="datetime" 
+                           value="{{ show.datetime.strftime('%Y-%m-%dT%H:%M') }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="language" class="form-label">Language</label>
+                    <input type="text" class="form-control" id="language" name="language" 
+                           value="{{ show.language }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" step="0.01" class="form-control" id="price" name="price" 
+                           value="{{ show.price }}" required>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Update Show</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

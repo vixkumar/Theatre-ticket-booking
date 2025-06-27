@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation - Theatre Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>Payment Confirmation</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h4>Booking Details</h4>
+                        <p>
+                            <strong>Movie:</strong> {{ movie.title }}<br>
+                            <strong>Theatre:</strong> {{ theatre.t_name }}<br>
+                            <strong>Show Time:</strong> {{ show.datetime.strftime('%d %b %Y, %I:%M %p') }}<br>
+                            <strong>Language:</strong> {{ show.language }}<br>
+                            <strong>Selected Seats:</strong> {{ seats|join(', ') }}<br>
+                            <strong>Total Amount:</strong> ₹{{ "%.2f"|format(total_amount) }}
+                        </p>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ url_for('confirm_booking', show_id=show.show_id) }}">
+                    <input type="hidden" name="seats" value="{{ seats|join(',') }}">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Confirm and Pay</button>
+                        <a href="{{ url_for('book_ticket', show_id=show.show_id) }}" class="btn btn-secondary">Back to Seat Selection</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

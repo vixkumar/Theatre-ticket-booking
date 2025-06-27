@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Theatre - Theatre Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Edit Theatre</h3>
+                    </div>
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <form action="{{ url_for('edit_theatre', tid=theatre.tid) }}" method="POST">
+                            <div class="mb-3">
+                                <label for="t_name" class="form-label">Theatre Name</label>
+                                <input type="text" class="form-control" id="t_name" name="t_name" value="{{ theatre.t_name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" value="{{ theatre.location }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="total_seats" class="form-label">Total Seats</label>
+                                <input type="number" class="form-control" id="total_seats" name="total_seats" value="{{ theatre.total_seats }}" required min="1">
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                                <button type="submit" class="btn btn-primary">Update Theatre</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
